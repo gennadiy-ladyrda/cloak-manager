@@ -1,9 +1,12 @@
 from dataclasses import dataclass
+from typing import Optional
 
 
 @dataclass
 class Inventory:
     router_host: str
+    router_auth_method: str
+    router_password: Optional[str]
     service_name: str
     cloak_version: str
 

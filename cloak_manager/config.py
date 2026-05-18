@@ -2,6 +2,8 @@ from dotenv import dotenv_values
 from cloak_manager.models import Inventory
 
 
+VALID_AUTH_METHODS = {"key", "password"}
+
 REQUIRED_KEYS = [
     "ROUTER_HOST",
     "SERVICE_NAME",
@@ -28,8 +30,17 @@ def load_inventory(path: str) -> Inventory:
     if missing:
         raise ConfigError(f"Missing required variables: {', '.join(missing)}")
 
+    router_auth_method = (data.get("ROUTER_AUTH_METHOD") or "key").strip().lower()
+
+    if router_auth_method not in VALID_AUTH_METHODS:
+        raise ConfigError(
+            "ROUTER_AUTH_METHOD must be either 'key' or 'password'"
+        )
+
     return Inventory(
         router_host=data["ROUTER_HOST"],
+        router_auth_method=router_auth_method,
+        router_password=data.get("ROUTER_PASSWORD"),
         service_name=data["SERVICE_NAME"],
         cloak_version=data["CLOAK_VERSION"],
         vps_ip=data["VPS_IP"],

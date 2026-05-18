@@ -41,6 +41,27 @@ class Installer:
 
         self.enable_service()
 
+    def update(self):
+        console.print("[green]Checking router[/green]")
+
+        self.router.check_disk_space()
+
+        if not self.router.service_exists(self.inventory.service_name):
+            raise Exception(
+                f"Service {self.inventory.service_name} is not installed"
+            )
+
+        arch = self.router.detect_architecture()
+
+        console.print(f"[green]Detected architecture:[/green] {arch}")
+
+        binary_path = self.download_cloak_binary(arch)
+
+        self.upload_binary(binary_path)
+        self.install_config()
+        self.install_service()
+        self.enable_service()
+
     def download_cloak_binary(self, arch: str):
         cache_dir = Path("cache")
         cache_dir.mkdir(exist_ok=True)

@@ -1,0 +1,18 @@
+{
+  "Transport": "direct",
+  "ProxyMethod": "openvpn",
+  "EncryptionMethod": "aes-gcm",
+  "UID": "{{ uid_value }}",
+  "PublicKey": "{{ public_key }}",
+  "ServerName": "{{ server_name }}",
+  "AlternativeNames": [
+    "cloudflare.com",
+    "github.com",
+    "bing.com"
+  ],
+  "RemoteHost": "{{ vps_ip }}",
+  "RemotePort": "{{ remote_port }}",
+  "NumConn": 1,
+  "BrowserSig": "chrome",
+  "StreamTimeout": 300
+}

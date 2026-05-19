@@ -33,13 +33,13 @@ def cmd_install(args):
     inventory = load_inventory(args.inventory)
 
     ssh = build_ssh_client(inventory)
-    ssh.connect()
+    try:
+        ssh.connect()
 
-    installer = Installer(ssh, inventory)
-
-    installer.install()
-
-    ssh.close()
+        installer = Installer(ssh, inventory)
+        installer.install()
+    finally:
+        ssh.close()
 
     console.print("[green]Installation complete[/green]")
 
@@ -48,34 +48,34 @@ def cmd_list(args):
     inventory = load_inventory(args.inventory)
 
     ssh = build_ssh_client(inventory)
-    ssh.connect()
+    try:
+        ssh.connect()
 
-    router = Router(ssh)
+        router = Router(ssh)
+        services = router.check_existing_services()
 
-    services = router.check_existing_services()
+        table = Table(title="Cloak services")
+        table.add_column("Service")
 
-    table = Table(title="Cloak services")
+        for service in services:
+            table.add_row(service)
 
-    table.add_column("Service")
-
-    for service in services:
-        table.add_row(service)
-
-    console.print(table)
-
-    ssh.close()
+        console.print(table)
+    finally:
+        ssh.close()
 
 
 def cmd_status(args):
     inventory = load_inventory(args.inventory)
 
     ssh = build_ssh_client(inventory)
-    ssh.connect()
+    try:
+        ssh.connect()
 
-    router = Router(ssh)
-    status = router.get_service_status(inventory.service_name)
-
-    ssh.close()
+        router = Router(ssh)
+        status = router.get_service_status(inventory.service_name)
+    finally:
+        ssh.close()
 
     console.print(
         f"[green]{inventory.service_name}[/green]: {status}"
@@ -86,12 +86,13 @@ def cmd_remove(args):
     inventory = load_inventory(args.inventory)
 
     ssh = build_ssh_client(inventory)
-    ssh.connect()
+    try:
+        ssh.connect()
 
-    router = Router(ssh)
-    router.remove_service(inventory.service_name)
-
-    ssh.close()
+        router = Router(ssh)
+        router.remove_service(inventory.service_name)
+    finally:
+        ssh.close()
 
     console.print("[green]Service removed[/green]")
 
@@ -100,12 +101,13 @@ def cmd_update(args):
     inventory = load_inventory(args.inventory)
 
     ssh = build_ssh_client(inventory)
-    ssh.connect()
+    try:
+        ssh.connect()
 
-    installer = Installer(ssh, inventory)
-    installer.update()
-
-    ssh.close()
+        installer = Installer(ssh, inventory)
+        installer.update()
+    finally:
+        ssh.close()
 
     console.print("[green]Update complete[/green]")
 

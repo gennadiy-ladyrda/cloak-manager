@@ -51,3 +51,25 @@ class Router:
     def service_exists(self, service_name: str):
         services = self.check_existing_services()
         return service_name in services
+
+    def get_service_status(self, service_name: str):
+        if not self.service_exists(service_name):
+            return "not installed"
+
+        result = self.ssh.exec(
+            f"/etc/init.d/{service_name} status >/dev/null 2>&1"
+        )
+
+        if result["exit_code"] == 0:
+            return "running"
+
+        return "stopped"
+
+    def remove_service(self, service_name: str):
+        if not self.service_exists(service_name):
+            raise RouterError(f"Service {service_name} is not installed")
+
+        self.ssh.exec(f"/etc/init.d/{service_name} stop >/dev/null 2>&1 || true")
+        self.ssh.exec(f"/etc/init.d/{service_name} disable >/dev/null 2>&1 || true")
+        self.ssh.exec(f"rm -f /etc/init.d/{service_name}")
+        self.ssh.exec(f"rm -f /etc/cloak/{service_name}.json")

@@ -17,8 +17,8 @@ start_service() {
     procd_set_param command "$PROG" \
         -s "$HOST" \
         -l "$PORT" \
-        {% if transport == "udp" %}-u{% endif %} \
-        -c "$CONFIG"
+{% if transport == "udp" %}        -u \
+{% endif %}        -c "$CONFIG"
 
     procd_set_param stdout 1
     procd_set_param stderr 1

@@ -58,6 +58,8 @@ pip install -r requirements.txt
 
 ```bash
 ROUTER_HOST=root@192.168.8.1
+ROUTER_AUTH_METHOD=key
+# ROUTER_PASSWORD=
 
 SERVICE_NAME=cloak-office
 
@@ -74,6 +76,18 @@ PUBLIC_KEY=yyyyyyyy
 
 SERVER_NAME=dzen.ru
 ```
+
+## Router authentication
+
+Two authentication modes are supported:
+
+- `ROUTER_AUTH_METHOD=key`: use preconfigured SSH key authentication
+- `ROUTER_AUTH_METHOD=password`: use the router password
+
+For password authentication you can either:
+
+- store `ROUTER_PASSWORD=...` in the inventory file
+- leave `ROUTER_PASSWORD` unset and enter the password manually when the command starts
 
 ## Commands
 
